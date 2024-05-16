@@ -2,7 +2,7 @@ import com.fazecast.jSerialComm.*;
 import java.io.*;
 import java.net.*;
 
-public class Rasberry_Client {
+public class Raspberry_Client {
     public static void main(String[] args) throws IOException {
         // Seri portu seç ve başlat
         SerialPort selectedPort = selectAndOpenSerialPort();

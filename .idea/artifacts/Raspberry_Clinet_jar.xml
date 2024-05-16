@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Raspberry_Clinet:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Raspberry_Clinet_jar</output-path>
+    <root id="archive" name="Raspberry_Clinet.jar">
+      <element id="module-output" name="Raspberry_Clinet" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/jSerialComm.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

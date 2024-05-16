@@ -23,8 +23,27 @@ public class Raspberry_Client {
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+        // Sunucu bağlantısını izlemek için bir thread oluştur
+        Thread connectionWatcher = new Thread(() -> {
+            try {
+                while (true) {
+                    if (socket.isClosed() || socket.isInputShutdown() || socket.isOutputShutdown()) {
+                        System.err.println("Sunucu bağlantısı kesildi.");
+                        selectedPort.closePort();
+                        selectedPort.removeDataListener();
+                        System.exit(1);
+                    }
+                    Thread.sleep(100); // Bağlantıyı her 1 saniyede bir kontrol et
+                }
+            } catch (InterruptedException e) {
+                System.err.println("Bağlantı izleyici thread kesintiye uğradı: " + e.getMessage());
+            }
+        });
+        connectionWatcher.start();
+
+
         // Seri porttan veri okumak için bir dinleyici oluştur
-        selectedPort.addDataListener(new SerialPortDataListener() {
+        SerialPortDataListener listener = new SerialPortDataListener() {
             StringBuilder buffer = new StringBuilder();
 
             public int getListeningEvents() {
@@ -49,16 +68,9 @@ public class Raspberry_Client {
                     buffer.setLength(0); // Tamponu temizle
                 }
             }
-        });
+        };
 
-        // Programın sonlanmasını engellemek için beklet
-        while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        selectedPort.addDataListener(listener);
     }
 
     private static SerialPort selectAndOpenSerialPort() {
